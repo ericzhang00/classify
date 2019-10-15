@@ -19,35 +19,32 @@ argmax:
     sw s1, 4(sp)
     sw s2, 8(sp)
     add s0, x0, a0 #address of pointer
-    lw s1, 0(a1) #size of pointer
+    add s1, x0, a1 #size of pointer
     add s2, x0, x0 #counter of pointer
-
-    addi t0, x0, x0 #biggest
-    addi t1, x0, x0 #smallest
-    addi t2, x0, x0
-
+    #addi a0, x0, 1
+         # Set a1 to the value returned by the factorial.
+      # 1 is the code for printing an integer. Set a0 to 1.
+    #ecall
+    
 loop_start:
+    lw t0, 0(s0) #biggestVal
+    add t1, s2, x0 #biggestIndex 
+loop_continue:
     addi s2, s2, 1
     bge s2, s1, loop_end
-    j loop_continue
-
-loop_continue:
-    lw t0, 0(s0)
-    bgt 0(s0), t0, bigger
-    blt 0(s0), t0, smaller
-    
+    addi s0, s0, 4
+    lw t2, 0(s0) # curr
+    #addi a1, t2, 0
+    #ecall
+    bgt t2, t0, bigger
+    h: j loop_continue
 bigger:
-lw t0, 0(s0)
-    addi s0, s0, 4
-    j loop_start
-smaller:
-    lw s0, 0(x0)
-    addi s0, s0, 4
-    j loop_start
-
+    lw t0, 0(s0)
+    add t1, s2, x0
+    j h
 loop_end:
-
     # Epilogue
+    add a0, t1, x0
     lw s0, 0(sp)
     lw s1, 4(sp)
     lw s2, 8(sp)
