@@ -21,40 +21,51 @@ matmul:
     # Error if mismatched dimensions
     bne a2, a4, mismatched_dimensions
     # Prologue
-    addi sp, sp, -24
+    addi sp, sp, -32
     sw s0, 0(sp)
     sw s1, 4(sp)
     sw s2, 8(sp)
     sw s3, 12(sp)
     sw s4, 16(sp)
     sw s5, 20(sp)
-    add s0, a0, x0 # address
-    add s1, a1, x0 # height or number of rows of m0
-    add s2, a2, x0 # width or number of cols of m0 [STRIDE of v0]
-    add s3, a3, x0 # address of pointer
-    add s4, a4, x0 # height or number of rows of m1 [STRIDE OF V2]
-    add s5, a5, x0 # width or number of cols of m2
-    add s6, a6, x0 #pointer to start of d
-    add t3, x0, x0 #counter
-   	mul t1, a1, a5 #size of output array
+    sw s6, 24(sp)
+    sw s7, 28(sp)
+    add s0, x0, a0 #address of pointer m0
+    add s1, x0, a3 #address of pointer m1
+    add s2, x0, a1 #size of outer pointer m0
+    add s3, x0, a5 #size of inner pointer m1
+    add s4, x0, x0 #outer counter m0
+    add s5, x0, x0 #inner counter m1
+    add s6, x0, a2 #iterate along m0
+    add s7, x0, a6 #pointer to start of d
+
 outer_loop_start:
-	bgt t1, t3, inner_loop_start
-	beq t1, t3, outer_loop_end
+	bge s4, s2, outer_loop_end
+  j inner_loop_start
+
 inner_loop_start:
-	addi t3, t3, 1
-	add a0, s0, x0
-	add a1, s3, x0
-	mul a2, s1, s2
-	add a3, s2, x0
-	add a4, s4, x0
-	jal dot
-	sw s6, 0(a0)
-	addi s6, s6, 4
-	addi s0, s0, 4
-	addi s3, s3, 4
-	j outer_loop_start
+  bge s5, s3, inner_loop_end
+  add a0, s0, x0
+  add a1, s1, x0
+  add a2, s6, x0
+  addi a3, x0, 1
+  add a4, s3, x0
+  jal dot
+  sw a0, 0(s7)
+
+  addi s7, s7, 4
+  addi s1, s1, 4
+  addi s5, s5, 1
+  j inner_loop_start
+
 inner_loop_end:
-	#haha i mighta messed up
+	add s5, x0, x0 #reset inner loop counter
+  add t2, s6, s6
+  add t2, t2, t2
+  add s0, s0, t2 #move to next row of m0
+  addi s4, s4, 1
+  j outer_loop_start
+
 outer_loop_end:
     # Epilogue
     lw s0, 0(sp)
@@ -63,7 +74,9 @@ outer_loop_end:
     lw s3, 12(sp)
     lw s4, 16(sp)
     lw s5, 20(sp)
-    addi sp, sp, 24
+    lw s6, 24(sp)
+    lw s7, 28(sp)
+    addi sp, sp, 32
 
     ret
 
