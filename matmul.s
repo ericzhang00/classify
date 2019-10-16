@@ -59,19 +59,20 @@ inner_loop_start:
     jal dot
 
     addi t5, a0, 0 
+    sw t5, 0(s6)
 
     addi t2, a1, 0
     addi a1, t5, 0
     addi a0, x0, 1
-    ecall
+    #ecall
     addi a1, x0, '\n'    # We want to print the newline character. Set a1 to '\n'.
     addi a0, x0, 11      # 11 is the code for printing a char. Set a0 to 11.
-    ecall
+    #ecall
 
     addi a1, t2, 0
     add a0, s7, x0
 
-    sw t5, 0(s6)
+    
     addi s6, s6, 4 #pushup pointer d by 4
     addi t4, t4, 1
     addi a1, a1, 4 #move up the second array first elem
@@ -86,18 +87,31 @@ inner_loop_end:
 
 #haha i mighta messed up
 outer_loop_end:
-
+    add t2, s6, x0
+    addi t0, x0, 0
+    check_loop:
+        addi t1, x0, 9
+        beq t0, t1, h
+        lw t3, 0(t2)
+        addi a1, t3, 0
+        addi a0, x0, 1
+        #ecall
+        addi a1, x0, '\n'    # We want to print the newline character. Set a1 to '\n'.
+        addi a0, x0, 11      # 11 is the code for printing a char. Set a0 to 11.
+        #ecall
+        addi t2, t2, 4 
+        addi t0, t0, 1
+        j check_loop
     # Epilogue
-    lw s0, 0(sp)
+    h:lw s0, 0(sp)
     lw s1, 4(sp)
     lw s2, 8(sp)
     lw s3, 12(sp)
     lw s4, 16(sp)
     lw s5, 20(sp)
     lw ra, 24(sp)
-    lw s6, 28(sp)
     lw s7, 32(sp)
-    addi sp, sp, 28
+    addi sp, sp, 36
     
     ret
 
