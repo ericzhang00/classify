@@ -87,21 +87,7 @@ inner_loop_end:
 
 #haha i mighta messed up
 outer_loop_end:
-    add t2, s6, x0
-    addi t0, x0, 0
-    check_loop:
-        addi t1, x0, 9
-        beq t0, t1, h
-        lw t3, 0(t2)
-        addi a1, t3, 0
-        addi a0, x0, 1
-        #ecall
-        addi a1, x0, '\n'    # We want to print the newline character. Set a1 to '\n'.
-        addi a0, x0, 11      # 11 is the code for printing a char. Set a0 to 11.
-        #ecall
-        addi t2, t2, 4 
-        addi t0, t0, 1
-        j check_loop
+    
     # Epilogue
     h:lw s0, 0(sp)
     lw s1, 4(sp)
@@ -109,6 +95,7 @@ outer_loop_end:
     lw s3, 12(sp)
     lw s4, 16(sp)
     lw s5, 20(sp)
+    lw s6, 28(sp)
     lw ra, 24(sp)
     lw s7, 32(sp)
     addi sp, sp, 36
