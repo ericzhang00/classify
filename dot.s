@@ -22,7 +22,7 @@ dot:
     #add s3, x0, x0 #counter of pointer v0
     #add s4, x0, x0 #counter of pointer v1
     #add s5, x0, x0 #numcounter
-    add t0, x0, x0 #dot productd
+    add t0, x0, x0 #dot product
     addi t4, x0, 4 #4 constant
     mul t5, a3, t4 #strideadd v0
     mul t6, a4, t4#strideadd v1
@@ -32,9 +32,6 @@ loop_start:
   lw t1, 0(a0) #element of v0
   lw t2, 0(a1) #element of v1
   mul t4, t1, t2 #product of elements
-  addi s7, a0, 0 #temp for calling
-
-
   add t0, t0, t4 #incrementing dot product
   add a0, a0, t5 #changing index
   add a1, a1, t6#changing indexd
@@ -43,7 +40,7 @@ loop_start:
 
 loop_end:
     # Epilogue
-    
+
     #lw s0, 0(sp)
     #lw s1, 4(sp)
     #lw s2, 8(sp)
