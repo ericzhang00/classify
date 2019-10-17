@@ -64,15 +64,8 @@ inner_loop_start:
     addi s2, s2, 1
     add s6, x0, a0
     add s8, a1, x0
-
-
     jal dot
     sw a0, 0(a6)
-
-
-    
-    
-
     add a1, s8, x0
     add a0, x0, s6
     addi a6, a6, 4
