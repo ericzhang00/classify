@@ -63,14 +63,17 @@ inner_loop_start:
     beq s2, s4, inner_loop_end
     addi s2, s2, 1
     add s6, x0, a0
+    add s7, a6, x0
     add s8, a1, x0
     jal dot
     sw a0, 0(a6)
     add a1, s8, x0
+    add a6, s7, x0
     add a0, x0, s6
-    addi a6, a6, 4
+
+    addi a6, a6, 4 #COULD BE COMPROMISED
     #addi s2, s2, 1
-    addi a1, a1, 4
+    addi a1, a1, 4 
     j inner_loop_start
 inner_loop_end:
     
