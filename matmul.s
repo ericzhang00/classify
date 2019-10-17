@@ -82,8 +82,6 @@ inner_loop_end:
     addi t0, x0, 4
     mul t1, s9, t0 #possibly wrong
     add a0, a0, t1
-
-
     j outer_loop_start
 outer_loop_end:
     lw s0, 0(sp)
@@ -99,7 +97,7 @@ outer_loop_end:
     lw s9, 40(sp)
     lw s10, 44(sp)
     lw s11, 48(sp)
-    addi sp, sp, -52
+    addi sp, sp, 52
     ret
 
 mismatched_dimensions:
