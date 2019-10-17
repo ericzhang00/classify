@@ -19,9 +19,9 @@
 matmul:
 
     # Error if mismatched dimensions
-    bne a1, a5, mismatched_dimensions
+    bne a2, a4, mismatched_dimensions
     # Prologue
-    addi sp, sp, -36
+    addi sp, sp, -52
     sw s0, 0(sp)
     sw s1, 4(sp)
     sw s2, 8(sp)
@@ -31,77 +31,80 @@ matmul:
     sw s6, 28(sp)
     sw s7, 32(sp)
     sw ra, 24(sp)
-    add s0, a0, x0 # address of pointer for m0
-    add s1, a1, x0 # height or number of rows of m0
-    add s2, a2, x0 # width or number of cols of m0 [STRIDE of v0]
-    add s3, a3, x0 # address of pointer for m1
-    add s4, a4, x0 # height or number of rows of m1 [STRIDE OF V2]
-    add s5, a5, x0 # width or number of cols of m2
-    add s6, a6, x0 #pointer to start of d
-    add t3, x0, x0 #counter
-    mul t1, a1, a5 #size of output array
-    add t5, x0, x0 #dots
-    add t4, x0, x0 #innercounter
-
-    add a0, s0, x0
-    add a1, s3, x0
-    mul a2, s4, s5
-    addi a3, x0, 1
-    addi a4, s4, 0
+    sw s8, 36(sp)
+    sw s9, 40(sp)
+    sw s10, 44(sp)
+    sw s11, 48(sp)
+    #add s0, a0, x0 # address of pointer for m0
+   # add s1, a1, x0 # height or number of rows of m0
+    #add s2, a2, x0 # width or number of cols of m0 [STRIDE of v0]
+    #add s3, a3, x0 # address of pointer for m1
+    #add s4, a4, x0 # height or number of rows of m1 [STRIDE OF V2]
+    #add s5, a5, x0 # width or number of cols of m2
+    #add s6, a6, x0 #pointer to start of d
+    add s0, x0, x0 #counter
+    mul s1, a1, a5 #size of output array
+    add s3, a1, x0 #numsrows of m1
+    add s9, a2, x0
+    add s4, a5, x0 #numcols of m2
+    add s5, a3, x0 #second matrix's address
+    #setting parameters
+    add a0, a0, x0 #pointer to start of v0
+    add a1, a3, x0# pointer to start of v1
+    add a2, a4, x0 # length of vectors
+    addi a3, x0, 1# stride of v0
+    addi a4, s4, 0#stride of v1
 
 outer_loop_start:
-    beq s1, t3, outer_loop_end
-    addi t3, t3, 1 #outercounter 
-
+    beq s3, s0, outer_loop_end
+    addi s0, s0, 1
+    add s2, x0, x0 #innercounter
 inner_loop_start:
-    beq t4, s5, inner_loop_end  
-    addi s7, a0, 0 #temp for calling
+    beq s2, s4, inner_loop_end
+    addi s2, s2, 1
+    add s6, x0, a0
+    add s8, a1, x0
+
+
     jal dot
+    sw a0, 0(a6)
 
-    addi t5, a0, 0 
-    sw t5, 0(s6)
-
-    addi t2, a1, 0
-    addi a1, t5, 0
-    addi a0, x0, 1
-    #ecall
-    addi a1, x0, '\n'    # We want to print the newline character. Set a1 to '\n'.
-    addi a0, x0, 11      # 11 is the code for printing a char. Set a0 to 11.
-    #ecall
-
-    addi a1, t2, 0
-    add a0, s7, x0
 
     
-    addi s6, s6, 4 #pushup pointer d by 4
-    addi t4, t4, 1
-    addi a1, a1, 4 #move up the second array first elem
-    j inner_loop_start  
+    
+
+    add a1, s8, x0
+    add a0, x0, s6
+    addi a6, a6, 4
+    #addi s2, s2, 1
+    addi a1, a1, 4
+    j inner_loop_start
 inner_loop_end:
-    add a1, s3, x0 #reset first elem of second array
-    add t4, x0, x0#reset counter
-    addi t6, x0, 4
-    mul s8, s1, t6 #pushup by whatever (fiist array) CONCERTNING
-    add a0, a0, s8
-    j outer_loop_start
-
-#haha i mighta messed up
-outer_loop_end:
     
-    # Epilogue
-    h:lw s0, 0(sp)
+    addi a1, s5, 0
+    addi s2, x0, 0
+    addi t0, x0, 4
+    mul t1, s9, t0 #possibly wrong
+    add a0, a0, t1
+
+
+    j outer_loop_start
+outer_loop_end:
+    lw s0, 0(sp)
     lw s1, 4(sp)
     lw s2, 8(sp)
     lw s3, 12(sp)
     lw s4, 16(sp)
     lw s5, 20(sp)
     lw s6, 28(sp)
-    lw ra, 24(sp)
     lw s7, 32(sp)
-    addi sp, sp, 36
-    
+    lw ra, 24(sp)
+    lw s8, 36(sp)
+    lw s9, 40(sp)
+    lw s10, 44(sp)
+    lw s11, 48(sp)
+    addi sp, sp, -52
     ret
-
 
 mismatched_dimensions:
     li a1 2
