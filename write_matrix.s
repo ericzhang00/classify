@@ -22,10 +22,10 @@ write_matrix:
     # Prologue
     addi sp, sp, -20
     sw s0, 0(sp)
-    sw s1, 0(sp)
-    sw s2, 0(sp)
-    sw s3, 0(sp)
-    sw s4, 0(sp)
+    sw s1, 4(sp)
+    sw s2, 8(sp)
+    sw s3, 12(sp)
+    sw s4, 16(sp)
     add s0, a0, x0
     add s1, a1, x0
     sw a2, 0(s2)
@@ -63,10 +63,10 @@ write_matrix:
 
     # Epilogue
     lw s0, 0(sp)
-    lw s1, 0(sp)
-    lw s2, 0(sp)
-    lw s3, 0(sp)
-    lw s4, 0(sp)
+    lw s1, 4(sp)
+    lw s2, 8(sp)
+    lw s3, 12(sp)
+    lw s4, 16(sp)
     addi sp, sp, 20
 
     ret
