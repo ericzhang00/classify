@@ -7,6 +7,7 @@ file_path: .asciiz "./test_input.bin"
 .text
 main:
     # Read matrix into memory
+    #Fairly Confident it works
     #row memory
     addi a0, x0, 4
     jal malloc
@@ -22,8 +23,8 @@ main:
     add a2, t1, x0
 
     # Print out elements of matrix
-    jal read_matrix
-    jal print_int_array
+    jal read_matrix #gets matrix values and a0 pointer is set to that
+    jal print_int_array#prints individual integer valuez
 
     # Terminate the program
     addi a0, x0, 10
