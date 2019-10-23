@@ -20,72 +20,81 @@
 write_matrix:
 
     # Prologue
-    addi sp, sp, -24
-    sw s0, 0(sp)
-    sw s1, 4(sp)
-    sw s2, 8(sp)
-    sw s3, 12(sp)
-    sw s4, 16(sp)
-    sw ra, 20(sp)
+    addi sp, sp, -44
+    sw s0, 0(sp) #filename
+    sw s1, 4(sp) #matr pointer
+    sw s2, 8(sp)#rows
+    sw s3, 12(sp)#columns   
+    sw s4, 16(sp)#-1
+    sw s5, 20(sp)# useless
+    sw s6, 24(sp)# num elements or rows*cols
+    sw s7, 28(sp)# file descriptor
+    sw s8, 32(sp)# rows buffer
+    sw s9, 36(sp)# cols buffer
+    sw ra,  40(sp)
 
+    #Putting Arguments in Saved Registers
+
+    add s0, a0, x0
+    add s1, a1, x0
     add s2, a2, x0
     add s3, a3, x0
 
+    #addi s4, x0, -1 #something holding -1
+    addi s5, x0, 4 #something holding value 4
+    mul s6, s2, s3 #total number of elements
 
-    add s0, a0, x0 #set s0 to the first argument (the pointer to string representing the filename)
-    add s1, a1, x0 #set s1 to the second argument(the pointer to the string representing the start of matrix)
-    sw a2, 0(a2) # put a2 in memory in 0(s2) spot in memory 
-    sw a3, 0(a3) # put a2 in memory in 0(s3) spot in memory 
-    mul s4, a2, a3 #number of elements in matrix
 
+    add a0, x0, x0  #setting a0=0
     add a1, s0, x0 #a1 -> string     
     addi a2, x0, 1 #a2 -> permission number
     jal fopen
-    addi t0, x0, -1 
-    beq a0, t0, eof_or_error  #error if open fails 
-
-
+    addi s4, x0, -1 
+    beq a0, s4, eof_or_error  #error if open fails 
+    add s7, x0, a0 #permission num
     #NO ERRORS TILL HERE
 
-
-    add a1, a0, x0 # a1 = unique integer tied to file
-    add t0, a0, x0#the permission number for fopen call
-    addi a0, x0, 4
+    #mallocing space for rows buffer
+    addi a0, x0, 4 
     jal malloc
-    add t1, a0, x0 #the allocated space
-    sw s2, 0(t1)
-    add a1, x0, t0
-    add a2, t1, x0# a2 = s2 -> s2 is a spot in a random memory spot 
+    add s8, x0, a0 #space fo s8
+    sw s2, 0(s8)
+
+    add a1, x0, s7
+    add a2, s8, x0
     addi a3, x0, 1#a3 = 1
     addi a4, x0, 4
-
-
     jal fwrite
-
-
     bne a0, a3, eof_or_error
 
     #seems good so far
 
+#mallocing space for columns buffer
+    addi a0, x0, 4 
+    jal malloc
+    add s9, x0, a0 #space fo s9
+    sw s3, 0(s9)
 
-    #CHECK DIS
-    add a2, x0, s3 #a2 = s3 which is a spot in memory
-    addi a3, x0, 1 #a3 = 1 (write one element into the fwrite)
-    addi a4, x0, 4 #a4 = 4
-    jal fwrite
-    bne a0, a3, eof_or_error
-
-
-
-    add a2, x0, s1
-    add a3, x0, s4
+    add a1, x0, s7
+    add a2, s9, x0
+    addi a3, x0, 1#a3 = 1
     addi a4, x0, 4
     jal fwrite
     bne a0, a3, eof_or_error
 
+#MATRIX WRITING
+    add a1, s7, x0
+    add a2, s1, x0
+    add a3, s6, x0
+    addi a4, x0, 4
+    jal fwrite
+    bne a0, a3, eof_or_error
+
+#FILE CLOSING
+    add a1, s7, x0
     jal fclose
-    addi t1, x0, -1
-    beq t1, a0, eof_or_error
+    addi s4, x0, -1
+    beq s4, a0, eof_or_error
 
     # Epilogue
     lw s0, 0(sp)
@@ -93,8 +102,13 @@ write_matrix:
     lw s2, 8(sp)
     lw s3, 12(sp)
     lw s4, 16(sp)
-    lw ra, 20(sp)
-    addi sp, sp, 24
+    lw s5, 20(sp)
+    lw s6, 24(sp)
+    lw s7, 28(sp)
+    lw s8, 32(sp)
+    lw s9, 36(sp)
+    lw ra,  40(sp)
+    addi sp, sp, 44
 
     ret
 
