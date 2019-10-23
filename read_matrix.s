@@ -21,7 +21,7 @@ read_matrix:
     # Prologue
     addi sp, sp, -40
     sw s0, 0(sp)
-	sw s1, 4(sp)
+	  sw s1, 4(sp)
     sw s2, 8(sp)
     sw s3, 12(sp)
     sw s4, 16(sp)
@@ -31,17 +31,23 @@ read_matrix:
     sw s8, 32(sp)
     sw ra, 36(sp)
 
+
+
+
     add s0, x0, a0
     add s1, x0, a1
     add s2, x0, a2
 
-    addi a0, x0, 4
-    jal malloc #a0 now points to 4 bytes
-    add s1, x0, a0
+    #add a1, ra, x0
+    #jal print_int
 
-    addi a0, x0, 4
-    jal malloc #a0 now points to 4 bytes
-    add s2, x0, a0
+    #addi a0, x0, 4
+    #jal malloc #a0 now points to 4 bytes
+    #add s1, x0, a0
+
+    #addi a0, x0, 4
+    #jal malloc #a0 now points to 4 bytes
+    #add s2, x0, a0
 
     add a1, x0, s0  #a1 is pointer to string with filename
     add a2, x0, x0  #a2 is integer denoting read only
@@ -84,18 +90,26 @@ read_matrix:
     jal fread
     bne a0, s7, eof_or_error
 
+    #add a0, s3, x0
+    #addi a1, x0, 9
+    #addi a2, x0, 1
+    #jal print_int_array
+
+
     add a1, x0, s8
     jal fclose
+
     addi t4, x0, -1
     beq t4, a0, eof_or_error
 
+
     add a0, s3, x0
-    add a1, s1, x0
-    add a2, s2, x0
+
+
 
     # Epilogue
     lw s0, 0(sp)
-	lw s1, 4(sp)
+	  lw s1, 4(sp)
     lw s2, 8(sp)
     lw s3, 12(sp)
     lw s4, 16(sp)
@@ -105,6 +119,14 @@ read_matrix:
     lw s8, 32(sp)
     lw ra, 36(sp)
     addi sp, sp, 40
+
+    #add a1, ra, x0
+    #jal print_int
+
+    #add a1, ra, x0
+    #jal print_int
+    #j eof_or_error
+
 
     ret
 
