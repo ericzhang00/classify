@@ -23,9 +23,7 @@ main:
     # Exit if incorrect number of command line args
     bne a0, 5, error
 
-    error:
-      li a1 3 
-      jal exit2
+
 
 
 
@@ -87,7 +85,7 @@ main:
     # 3. LINEAR LAYER:    m1 * ReLU(m0 * input)
     addi a0, x0, 4
     jal malloc
-    add s10, a0, x0 #ALLOCATING SPACE FOR POINTER, how much space is necessary 4 or 4*rows*cols?? 
+    add s10, a0, x0 #ALLOCATING SPACE FOR POINTER, how much space is necessary 4 or 4*rows*cols??
 
     add a0, s3, x0
     add a1, s1, x0
@@ -109,7 +107,7 @@ main:
     #LAST LINEAR LAYER
     addi a0, x0, 4
     jal malloc
-    add s11, a0, x0 #ALLOCATING SPACE FOR POINTER, how much space is necessary 4 or 4*rows*cols?? 
+    add s11, a0, x0 #ALLOCATING SPACE FOR POINTER, how much space is necessary 4 or 4*rows*cols??
 
     add a0, s6, x0
     add a1, s8, x0
@@ -119,7 +117,7 @@ main:
     add a5, s5, x0
     add a6, s11, x0
     jal matmul
-    #final is in s11   
+    #final is in s11
 
     # =====================================
     # WRITE OUTPUT
@@ -149,3 +147,7 @@ main:
     jal print_char
 
     jal exit
+
+    error:
+      li a1 3
+      jal exit2
