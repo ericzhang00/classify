@@ -75,6 +75,8 @@ read_matrix:
     beq t4, a0, eof_or_error
 
     add a0, s3, x0
+    add a1, s1, x0
+    add a2, s2, x0
 
 
     # Epilogue

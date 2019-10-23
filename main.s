@@ -21,8 +21,11 @@ main:
     #   main.s <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
 
     # Exit if incorrect number of command line args
+    bne argc, 5, error
 
-
+    error:
+      li a1 3
+      jal exit2
 
 
 
