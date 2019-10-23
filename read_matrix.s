@@ -17,13 +17,19 @@
 #   a0 is the pointer to the matrix in memory
 # ==============================================================================
 read_matrix:
-    
+
     # Prologue
-    addi sp, sp, -16
+    addi sp, sp, -40
     sw s0, 0(sp)
 	sw s1, 4(sp)
     sw s2, 8(sp)
     sw s3, 12(sp)
+    sw s4, 16(sp)
+    sw s5, 20(sp)
+    sw s6, 24(sp)
+    sw s7, 28(sp)
+    sw s8, 32(sp)
+    sw ra, 36(sp)
 
     add s0, x0, a0
     add s1, x0, a1
@@ -47,31 +53,38 @@ read_matrix:
     #a0 now file descriptor
 
 
+    add s8, a0, x0
 
-    add a1, a0, x0
-
+    add a1, s8, x0
     add a2, s1, x0
     addi a3, x0, 4
     jal fread
 
+    add a1, s8, x0
     add a2, s2, x0
     addi a3, x0, 4
     jal fread
 
-    lw t1, 0(s1)
-    lw t2, 0(s2)
-    mul t3, t1, t2
-    slli t3, t3, 2
-    add a0, t3, x0
+    lw s4, 0(s1)
+    lw s5, 0(s2)
+    mul s6, s4, s5
+    slli s6, s6, 2
+    add a0, s6, x0
     jal malloc  #allocates rows x columns x 4 bytes for matrix
     #a0 now pointer to allocated bytes
     add s3, x0, a0
 
     add a2, s3, x0
-    add a3, t3, x0
-    jal fread
-    bne a0, a3, eof_or_error
+    add a3, s6, x0
+    add s7, a3, x0
 
+
+    add a1, x0, s8
+
+    jal fread
+    bne a0, s7, eof_or_error
+
+    add a1, x0, s8
     jal fclose
     addi t4, x0, -1
     beq t4, a0, eof_or_error
@@ -85,7 +98,13 @@ read_matrix:
 	lw s1, 4(sp)
     lw s2, 8(sp)
     lw s3, 12(sp)
-    addi sp, sp, 16
+    lw s4, 16(sp)
+    lw s5, 20(sp)
+    lw s6, 24(sp)
+    lw s7, 28(sp)
+    lw s8, 32(sp)
+    lw ra, 36(sp)
+    addi sp, sp, 40
 
     ret
 
