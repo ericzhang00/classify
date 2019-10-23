@@ -21,26 +21,23 @@ write_matrix:
 
     # Prologue
     addi sp, sp, -44
-    sw s0, 0(sp) #filename
-    sw s1, 4(sp) #matr pointer
-    sw s2, 8(sp)#rows
-    sw s3, 12(sp)#columns   
-    sw s4, 16(sp)#-1
-    sw s5, 20(sp)# useless
-    sw s6, 24(sp)# num elements or rows*cols
-    sw s7, 28(sp)# file descriptor
-    sw s8, 32(sp)# rows buffer
-    sw s9, 36(sp)# cols buffer
+    sw s0, 0(sp) 
+    sw s1, 4(sp) 
+    sw s2, 8(sp)
+    sw s3, 12(sp)
+    sw s4, 16(sp)
+    sw s5, 20(sp)
+    sw s6, 24(sp)
+    sw s7, 28(sp)
+    sw s8, 32(sp)
+    sw s9, 36(sp)
     sw ra,  40(sp)
-
-    #Putting Arguments in Saved Registers
 
     add s0, a0, x0
     add s1, a1, x0
     add s2, a2, x0
     add s3, a3, x0
 
-    #addi s4, x0, -1 #something holding -1
     addi s5, x0, 4 #something holding value 4
     mul s6, s2, s3 #total number of elements
 
