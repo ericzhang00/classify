@@ -26,27 +26,31 @@ write_matrix:
     sw s2, 8(sp)
     sw s3, 12(sp)
     sw s4, 16(sp)
-    add s0, a0, x0
-    add s1, a1, x0
-    sw a2, 0(s2)
-    sw a3, 0(s3)
+
+    add s0, a0, x0 #set s0 to the first argument (the pointer to string representing the filename)
+    add s1, a1, x0 #set s1 to the second argument(the pointer to the string representing the start of matrix)
+    sw a2, 0(s2) # put a2 in memory in 0(s2) spot in memory (seems unnecessary)
+    sw a3, 0(s3) # put a2 in memory in 0(s3) spot in memory(seems unnecessary)
     mul s4, a2, a3 #number of elements in matrix
 
-    add a1, s0, x0
-    addi a2, x0, 1
+    add a1, s0, x0 #a1 -> string     
+    addi a2, x0, 1 #a2 -> permission number
     fopen
-    addi t0, x0, -1
-    beq a0, t0, eof_or_error  #error if open fails
+    addi t0, x0, -1 
+    beq a0, t0, eof_or_error  #error if open fails 
 
-    add a1, a0, x0
-    add a2, x0, s2
-    addi a3, x0, 1
+    #seems good so far
+
+    add a1, a0, x0 # a1 = unique integer tied ot file
+    add a2, x0, s2# a2 = s2 -> s2 is a spot in a random memory spot (i only kinda get it)
+    addi a3, x0, 1#a3 = 1
     addi a4, x0, 4
     fwrite
     bne a0, a3, eof_or_error
-    add a2, x0, s3
-    addi a3, x0, 1
-    addi a4, x0, 4
+
+    add a2, x0, s3 #a2 = s3 which is a spot in memory
+    addi a3, x0, 1 #a3 = 1 (write one element into the fwrite)
+    addi a4, x0, 4 #a4 = 4
     fwrite
     bne a0, a3, eof_or_error
 
