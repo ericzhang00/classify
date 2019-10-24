@@ -65,11 +65,13 @@ read_matrix:
     add a2, s1, x0
     addi a3, x0, 4
     jal fread
+    bne a0, a3, eof_or_error 
 
     add a1, s8, x0
     add a2, s2, x0
     addi a3, x0, 4
     jal fread
+    bne a0, a3, eof_or_error 
 
     lw s4, 0(s1)
     lw s5, 0(s2)
